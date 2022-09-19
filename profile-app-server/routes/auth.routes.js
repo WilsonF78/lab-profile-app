@@ -16,6 +16,8 @@ const isLoggedIn = require('../middleware/isLoggedIn');
 
 const jwt = require('jsonwebtoken');
 
+const fileUploader = require('../config/cloudinary.config');
+
 router.get('/loggedin', (req, res) => {
   res.json(req.user);
 });
@@ -150,6 +152,15 @@ router.get('/logout', isLoggedIn, (req, res) => {
     }
     res.json({ message: 'Done' });
   });
+});
+
+router.post('/upload', fileUploader.single('imageUrl'), (req, res, next) => {
+  // console.log("file is: ", req.file)
+
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
 });
 
 module.exports = router;
